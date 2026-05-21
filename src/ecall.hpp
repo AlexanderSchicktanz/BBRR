@@ -1,5 +1,4 @@
 #pragma once
-#include <cstdint>
 typedef enum{
     PRINTSTRING,//---Terminal---
     PRINTCHAR,
@@ -71,9 +70,31 @@ void custom_ecall_handler(Machine<RISCV64>& machine) {
             break;
         }
         select(SCANSTRING){
-            uint64_t addr = machine.cpu.reg(10);
+            uint64_t offset = machine.cpu.reg(10);
             uint64_t len = machine.cpu.reg(11);
-            //getline(std::cin,machine.memory.memstring(addr,len));
+
+            // Get the start address of the memory buffer
+            char* memory_start = (char*)machine.memory.start_address();
+            if (!memory_start) {
+                // Handle error: memory not accessible
+                return;
+            }
+
+            // Calculate the target address
+            char* target_addr = (char*)(memory_start + offset);
+
+            // Read input from std::cin and write it to the target address
+            std::string input;
+            std::getline(std::cin, input);
+
+            // Ensure we don't overflow the allocated memory
+            size_t bytes_to_write = std::min(input.size(), static_cast<size_t>(len));
+            std::memcpy(target_addr, input.data(), bytes_to_write);
+
+            // Null-terminate the string if needed (optional)
+            if (bytes_to_write < len) {
+                target_addr[bytes_to_write] = '\0';
+            }
             break;
         }
         select(SCANCHAR){
@@ -246,12 +267,64 @@ void custom_ecall_handler(Machine<RISCV64>& machine) {
             uint64_t b = machine.cpu.reg(16);
             DrawRectangle(x, y, w, h, (Color){r,g,b,255});
             int mX = GetMouseX(), mY = GetMouseY();
-            if(mX>x&&mX<x+w&&mY>y&&mY<y+h&&IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+            if(mX>x-w/16&&mX<x+w/16+w&&mY>y-h/16&&mY<y+h/16+h&&IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
                 machine.cpu.reg(10)=(((float)mX-(float)x)/(float)w)*8;
+                machine.cpu.reg(11)=(((float)mY-(float)y)/(float)h)*8;
+                DrawLineEx((Vector2){x+w/8*machine.cpu.reg(10),y+h/8*machine.cpu.reg(11)},(Vector2){x+w/2, y+h/2},5,BLACK);
+                DrawCircle(x+w/8*machine.cpu.reg(10), y+h/8*machine.cpu.reg(11), (float)((w<h)?w/4:h/4), (Color){255-r,255-g,255-b,255});
+            }else{
+                DrawCircle(x+w/2, y+h/2, (float)((w<h)?w/4:h/4), (Color){255-r,255-g,255-b,255});
             }
             break;
         }
         select(DPAD){
+            uint64_t x = machine.cpu.reg(10);
+            uint64_t y = machine.cpu.reg(11);
+            uint64_t w = machine.cpu.reg(12);
+            uint64_t h = machine.cpu.reg(13);
+            uint64_t r = machine.cpu.reg(14);
+            uint64_t g = machine.cpu.reg(15);
+            uint64_t b = machine.cpu.reg(16);
+            DrawRectangle(x, y, w, h, (Color){r, g, b, 255});
+
+            uint64_t buttonSize = w / 4;
+            uint64_t centerX = x + w / 2;
+            uint64_t centerY = y + h / 2;
+
+            Rectangle upButton = {centerX - buttonSize / 2, y, buttonSize, buttonSize};
+            Rectangle downButton = {centerX - buttonSize / 2, y + h - buttonSize, buttonSize, buttonSize};
+            Rectangle leftButton = {x, centerY - buttonSize / 2, buttonSize, buttonSize};
+            Rectangle rightButton = {x + w - buttonSize, centerY - buttonSize / 2, buttonSize, buttonSize};
+
+            int mouseX = GetMouseX();
+            int mouseY = GetMouseY();
+            bool mousePressed = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+            if (mousePressed) {
+                if (CheckCollisionPointRec((Vector2){mouseX, mouseY}, upButton)) {
+                    machine.cpu.reg(10) = 0;
+                    DrawRectangleRec(upButton, RED);
+                    DrawLineEx((Vector2){centerX, centerY}, (Vector2){centerX, y}, 5, BLACK);
+                } else if (CheckCollisionPointRec((Vector2){mouseX, mouseY}, downButton)) {
+                    machine.cpu.reg(10) = 1;
+                    DrawRectangleRec(downButton, RED);
+                    DrawLineEx((Vector2){centerX, centerY}, (Vector2){centerX, y + h}, 5, BLACK);
+                } else if (CheckCollisionPointRec((Vector2){mouseX, mouseY}, leftButton)) {
+                    machine.cpu.reg(10) = 2;
+                    DrawRectangleRec(leftButton, RED);
+                    DrawLineEx((Vector2){centerX, centerY}, (Vector2){x, centerY}, 5, BLACK);
+                } else if (CheckCollisionPointRec((Vector2){mouseX, mouseY}, rightButton)) {
+                    machine.cpu.reg(10) = 3;
+                    DrawRectangleRec(rightButton, RED);
+                    DrawLineEx((Vector2){centerX, centerY}, (Vector2){x + w, centerY}, 5, BLACK);
+                }
+            }
+            DrawRectangleRec(upButton, (Color){255 - r, 255 - g, 255 - b, 255});
+            DrawRectangleRec(downButton, (Color){255 - r, 255 - g, 255 - b, 255});
+            DrawRectangleRec(leftButton, (Color){255 - r, 255 - g, 255 - b, 255});
+            DrawRectangleRec(rightButton, (Color){255 - r, 255 - g, 255 - b, 255});
+
+            DrawCircle(centerX, centerY, buttonSize / 2, (Color){255 - r, 255 - g, 255 - b, 255});
+
             break;
         }
         select(SWITCHES){

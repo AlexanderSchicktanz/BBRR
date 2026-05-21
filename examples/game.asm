@@ -34,25 +34,22 @@ main:
     ecall
 
     li      a0, 50
-    addi    t0, t0, 1
-    addi    t1, t1, 1
-    remu    t0, t0, t2
-    remu    t1, t1, t2
-    addi    a1, t0, 0
-    addi    a2, t1, 0
+    li      a1, 50
+    li      a2, 50
     li      a3, 50
-    li      a4, 250
-    li      a5, 50
-    li      a6, 50
-    li      a7, 23
+    li      a4, 50
+    li      a5, 250
+    li      a6, 250
+    li      a7, 30
+    ecall
+
+    li      a7, 2
     ecall
 
     li      a7, 21
     ecall
     j loop
     exit:
-    li      a7, 39
-    ecall
 
     li      a7, 8
     ecall

@@ -10,13 +10,49 @@
 
     ./run <filename>
 
-## Additional ecalls
-* 110 OpenWindow(a0,a1,stringFrom(a2,a3))
-* 111 CloseWindow()
-* 112 BeginDrawing()
-* 113 EndDrawing()
-* 114 DrawRectangle()
-* 115 ClearBackground()
-* 116 a0=WindowShouldClose()
-The current ecalls will be made more flexible, by only using values in registers and the applications memory.
-More ecalls will be added later.
+## Ecalls
+* PRINTSTRING
+* PRINTCHAR
+* PRINTINT
+* SCANSTRING
+* SCANCHAR
+* SCANINT
+* INITWINDOW
+* RESIZEWINDOW
+* CLOSEWINDOW
+* WINDOWSHOULDCLOSE
+* SETLOGLEVEL
+* SETFPS
+* SHOWCURSOR
+* HIDECURSOR
+* SETCURSOR
+* ISCURSORHIDDEN
+* GETMOUSEINFO
+* SETMOUSEPOS
+* GETCHAR
+* GETKEY
+* BEGINDRAWING
+* ENDDRAWING
+* CLEARBACKGROUND
+* DRAWRECT
+* DRAWTRI
+* DRAWCIRCLE
+* DRAWLINE
+* DRAWPIXEL
+* DRAWTEXT
+* DRAWPOLY (to be implemented)
+* JOYSTICK
+* DPAD
+* SWITCHES (to be implemented)
+* LOADIMAGE
+* DRAWIMAGE
+* SIN
+* COS
+* TAN
+* SQRT
+* BREAKPOINT
+* GETTIME
+* SLEEP
+* SETRAND
+* GETRAND
+* EXIT
