@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# riscv_run.sh - Run RISC-V ELF files or assemble and run .asm files
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <filename>"
+    echo "  - If filename ends in .elf, runs it directly"
+    echo "  - If filename ends in .asm, assembles then runs it"
+    exit 1
+fi
+
+FILENAME="$1"
+BASENAME="${FILENAME%.*}"  # Remove extension
+
+# Check file extension
+if [[ "$FILENAME" == *.elf ]]; then
+    # Already an ELF file - run directly
+    echo "[INFO] Running ELF file: $FILENAME"
+    ./build/riscv_executor "$FILENAME"
+
+elif [[ "$FILENAME" == *.asm ]]; then
+    # Assembly file - assemble and link first
+    echo "[INFO] Assembling: $FILENAME"
+
+    # Assemble
+    riscv64-linux-gnu-as -o "${BASENAME}.o" "$FILENAME"
+    if [ $? -ne 0 ]; then
+        echo "[ERROR] Assembly failed"
+        exit 1
+    fi
+
+    # Link
+    echo "[INFO] Linking: ${BASENAME}.o"
+    riscv64-linux-gnu-ld -o "${BASENAME}.elf" "${BASENAME}.o"
+    if [ $? -ne 0 ]; then
+        echo "[ERROR] Linking failed"
+        exit 1
+    fi
+
+    echo "[INFO] Created: ${BASENAME}.elf"
+    echo "[INFO] Running: ${BASENAME}.elf"
+
+    # Run the ELF
+    ./build/riscv_executor "${BASENAME}.elf"
+
+    # Optional: Clean up intermediate files
+    # rm -f "${BASENAME}.o"
+
+else
+    echo "[ERROR] Unsupported file type: $FILENAME"
+    echo "Supported formats: .elf, .asm"
+    exit 1
+fi
