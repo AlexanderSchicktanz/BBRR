@@ -11,7 +11,7 @@ add_subdirectory(lib/raylib)
 add_subdirectory(libriscv/emulator)
 
 # Your executable
-add_executable(riscv_executor main.cpp)
+add_executable(riscv_executor src/main.cpp)
 
 # Link Raylib to your executable
 target_link_libraries(riscv_executor PRIVATE raylib)

@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/rvlinux.dir/link.d CMakeFiles/rvlinux.dir/src/main.cpp.o -o rvlinux  lib/libriscv.a -ldl

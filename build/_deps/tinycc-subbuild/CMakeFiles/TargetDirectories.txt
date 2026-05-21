@@ -1,0 +1,3 @@
+/home/alex/Dokumente/Vault/Semester_1/GDS/HiWi/RISC-V/BBRR/build/_deps/tinycc-subbuild/CMakeFiles/tinycc-populate.dir
+/home/alex/Dokumente/Vault/Semester_1/GDS/HiWi/RISC-V/BBRR/build/_deps/tinycc-subbuild/CMakeFiles/edit_cache.dir
+/home/alex/Dokumente/Vault/Semester_1/GDS/HiWi/RISC-V/BBRR/build/_deps/tinycc-subbuild/CMakeFiles/rebuild_cache.dir

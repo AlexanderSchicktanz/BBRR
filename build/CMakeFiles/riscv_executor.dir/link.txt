@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/riscv_executor.dir/link.d CMakeFiles/riscv_executor.dir/src/main.cpp.o -o riscv_executor  lib/raylib/raylib/libraylib.a libriscv/emulator/lib/libriscv.a -lpthread /usr/lib/libOpenGL.so /usr/lib/libGLX.so /usr/lib/libGLU.so /usr/lib/librt.a -lm -lm /usr/lib/libSM.so /usr/lib/libICE.so /usr/lib/libX11.so /usr/lib/libXext.so -ldl
