@@ -151,4 +151,4 @@ Contributions are welcome! Open an issue or submit a pull request.
 
 ---
 ## 📜 License
-[MIT](LICENSE)
+[GNU GPL v3](LICENSE)
