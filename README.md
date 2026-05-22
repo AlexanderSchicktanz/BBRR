@@ -40,10 +40,10 @@
 * DRAWLINE
 * DRAWPIXEL
 * DRAWTEXT
-* DRAWPOLY (to be implemented)
+* DRAWPOLY
 * JOYSTICK
 * DPAD
-* SWITCHES (to be implemented)
+* SWITCHES
 * LOADIMAGE
 * DRAWIMAGE
 * SIN

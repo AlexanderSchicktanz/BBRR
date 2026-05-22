@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
         machine.setup_linux_syscalls();
 
         // Install YOUR custom syscalls (use high numbers like 1000+ to avoid conflicts)
-        for(int i = 0; i < ECALLCODE::EXIT; i++)
+        for(int i = 0; i <= ECALLCODE::EXIT; i++)
             Machine<RISCV64>::install_syscall_handler(i, custom_ecall_handler);
 
         std::cout << "[INFO] Starting simulation..." << std::endl;

@@ -255,6 +255,14 @@ void custom_ecall_handler(Machine<RISCV64>& machine) {
             break;
         }
         select(DRAWPOLY){
+            int x = (int)machine.cpu.reg(10);
+            int y = (int)machine.cpu.reg(11);
+            uint8_t sides = (uint8_t)machine.cpu.reg(12);
+            uint8_t radius = (uint8_t)machine.cpu.reg(13);
+            int r = (int)machine.cpu.reg(14);
+            int g = (int)machine.cpu.reg(15);
+            int b = (int)machine.cpu.reg(16);
+            DrawPoly((Vector2){x,y}, sides, (float)radius, 0.0, (Color){r,g,b});
             break;
         }
         select(JOYSTICK){
@@ -328,6 +336,36 @@ void custom_ecall_handler(Machine<RISCV64>& machine) {
             break;
         }
         select(SWITCHES){
+            char* memory_start = (char*)machine.memory.start_address();
+            uint64_t numSwitches = machine.cpu.reg(10);
+            uint64_t memPosSwitches = machine.cpu.reg(11);
+            uint64_t x = machine.cpu.reg(12);
+            uint64_t y = machine.cpu.reg(13);
+            uint64_t w = machine.cpu.reg(14);
+            uint64_t h = machine.cpu.reg(15);
+
+            for(int i = 0; i < numSwitches; i++){
+                // Draw the switch background (blue rectangle)
+                DrawRectangle(x + i * w, y, w, h, BLUE);
+
+                // Draw the white part of the switch
+                DrawRectangle(x + i * w + w / 4, y + h * 2 / 5, w / 2, h * 4 / 5, WHITE);
+
+                // Draw the black part of the switch based on its state
+                if(*(memory_start + i)){
+                    // Draw black switch top (switch is ON)
+                    DrawRectangle(x + i * w + w / 4, y + h * 2 / 5, w / 2, h / 2, BLACK);
+                } else {
+                    // Draw black switch bottom (switch is OFF)
+                    DrawRectangle(x + i * w + w / 4, y + h * 2 / 5 + h / 2, w / 2, h / 2, BLACK);
+                }
+
+                // Check if the mouse clicks on the switch
+                if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON) &&
+                    CheckCollisionPointRec(GetMousePosition(), (Rectangle){x + i * w, y, w, h})){
+                    *(memory_start + i) ^= 1; // Toggle the switch state
+                    }
+            }
             break;
         }
         select(LOADIMAGE){

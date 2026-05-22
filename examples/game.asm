@@ -27,6 +27,12 @@ main:
     li      a7, 20
     ecall
 
+    li      a0, 250
+    li      a1, 100
+    li      a2, 50
+    li      a7, 22
+    ecall
+
     li      a0, 0
     li      a1, 0
     li      a2, 0
@@ -40,10 +46,13 @@ main:
     li      a4, 50
     li      a5, 250
     li      a6, 250
-    li      a7, 30
+    li      a7, 31
     ecall
 
     li      a7, 2
+    ecall
+
+    addi    a0, a1, 0
     ecall
 
     li      a7, 21
@@ -55,5 +64,5 @@ main:
     ecall
 
     li      a0, 0            # Exit code 0
-    li      a7, 44           # Custom ecall number 102 (exit)
+    li      a7, 44           # Custom ecall number (exit)
     ecall                    # Execute ecall
