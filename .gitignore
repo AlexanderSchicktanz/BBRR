@@ -2,3 +2,5 @@
 *.elf
 *.c
 /build/*
+graphics.asm
+input.asm

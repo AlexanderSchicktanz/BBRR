@@ -325,7 +325,9 @@ void custom_ecall_handler(Machine<RISCV64>& machine) {
                     DrawRectangleRec(rightButton, RED);
                     DrawLineEx((Vector2){centerX, centerY}, (Vector2){x + w, centerY}, 5, BLACK);
                 }
+                else machine.cpu.reg(10) = 4;
             }
+            else machine.cpu.reg(10) = 4;
             DrawRectangleRec(upButton, (Color){255 - r, 255 - g, 255 - b, 255});
             DrawRectangleRec(downButton, (Color){255 - r, 255 - g, 255 - b, 255});
             DrawRectangleRec(leftButton, (Color){255 - r, 255 - g, 255 - b, 255});
